@@ -5,16 +5,11 @@ class Participation(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     competition_id = db.Column(db.Integer, db.ForeignKey('competition.id'), nullable=False)
     rank = db.Column(db.Integer, nullable=False)
-    points_earned = db.Column(db.Integer, nullable=False)  # Add points_earned field
+    points_earned = db.Column(db.Integer, nullable=False)
 
+    user = db.relationship('User', back_populates='participations')
+    competition = db.relationship('Competition', back_populates='participants')
 
-    def __init__(self, user_id, competition_id, rank):
-        self.user_id = user_id
-        self.competition_id = competition_id
-        self.rank = rank
-        self.points_earned = self.calculate_points()
-
-        
     def calculate_points(self):
         if self.rank == 1:
             return 10
@@ -26,11 +21,10 @@ class Participation(db.Model):
             return 1
 
     def get_json(self):
-        return{
+        return {
             'id': self.id,
             'user_id': self.user_id,
-            'competition_id' : self.competition_id,
-            'rank' : self.rank,
-            'Points_earned' : self.points_earned
-
+            'competition_id': self.competition_id,
+            'rank': self.rank,
+            'points_earned': self.calculate_points()
         }
