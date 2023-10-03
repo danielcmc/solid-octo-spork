@@ -9,6 +9,7 @@ class Admin(User):
         new_Competition = Competition(name=name, creator_id=self.id)
         db.session.add(new_Competition)
         db.session.commit()
+        
         return new_Competition
 
     def get_json(self):
