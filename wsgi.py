@@ -38,6 +38,13 @@ def create_user_command(username, password):
     print(f'{username} is an Admin !')
 
 
+@user_cli.command("createStudent", help="Creates a Student")
+@click.argument("username", default="James")
+@click.argument("password", default="T.Kirk")
+def create_user_command(username, password):
+    create_Student(username, password)
+    print(f'{username} is an Student !')
+
 #@user_cli.command("createCompetition", help="Creates a Competition")
 #@click.argument("name", default="RunTime")
 #def create_user_command(name):
@@ -45,12 +52,7 @@ def create_user_command(username, password):
   #  print(f'{name} created!')
 
 # Then define the command and any parameters and annotate it with the group (@)
-@user_cli.command("create", help="Creates a user")
-@click.argument("username", default="rob")
-@click.argument("password", default="robpass")
-def create_user_command(username, password):
-    create_user(username, password)
-    print(f'{username} created!')
+
 
 # this command will be : flask user create bob bobpass
 
@@ -58,9 +60,9 @@ def create_user_command(username, password):
 @click.argument("format", default="string")
 def list_user_command(format):
     if format == 'string':
-        print(get_all_users())
+        print(get_all_students())
     else:
-        print(get_all_users_json())
+        print(get_all_students_json()) 
 
 app.cli.add_command(user_cli) # add the group to the cli
 
