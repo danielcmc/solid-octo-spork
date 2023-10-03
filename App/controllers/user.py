@@ -1,4 +1,5 @@
 from App.models import User
+from App.models import Admin
 from App.database import db
 
 def create_user(username, password):
@@ -6,6 +7,12 @@ def create_user(username, password):
     db.session.add(newuser)
     db.session.commit()
     return newuser
+
+def create_Admin(username, password):
+    newA = Admin(username=username, password=password)
+    db.session.add(newA)
+    db.session.commit()
+    return newA   
 
 def get_user_by_username(username):
     return User.query.filter_by(username=username).first()
@@ -30,4 +37,10 @@ def update_user(id, username):
         db.session.add(user)
         return db.session.commit()
     return None
+
+#def add_Competition(self, name: str, Creator: int):
+ #       new_Competition = Competition(name=name, creator_id=self.id)
+  #      db.session.add(new_Competition)
+   #     db.session.commit()
+    #    return new_Competition
     
