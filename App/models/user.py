@@ -28,7 +28,7 @@ class User(db.Model, UserMixin):
 
 class Student(User):
     __tablename__ = 'Student'
-    participations = db.relationship('Participation', backref='user', lazy=True)
+    Competed_In = db.relationship('Participation', backref='Student', lazy=True)
     point = db.Column(db.Integer, default=0)
 
     def participate_in_competition(self, competition):

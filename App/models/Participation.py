@@ -7,18 +7,10 @@ class Participation(db.Model):
     rank = db.Column(db.Integer, nullable=False)
     points_earned = db.Column(db.Integer, nullable=False)
 
-    user = db.relationship('User', back_populates='participations')
+    user = db.relationship('Student', back_populates='Competed_In')
     competition = db.relationship('Competition', back_populates='participants')
 
-    def calculate_points(self):
-        if self.rank == 1:
-            return 10
-        elif self.rank == 2:
-            return 7
-        elif self.rank == 3:
-            return 4
-        else:
-            return 1
+  
 
     def get_json(self):
         return {
