@@ -33,7 +33,7 @@ user_cli = AppGroup('user', help='User object commands')
 @user_cli.command("createAdmin", help="Creates a Competition")
 @click.argument("username", default="Dave")
 @click.argument("password", default="NBuster")
-def create_user_command(username, password):
+def create_admin_command(username, password):
     create_Admin(username, password)
     print(f'{username} is an Admin !')
 
@@ -41,15 +41,51 @@ def create_user_command(username, password):
 @user_cli.command("createStudent", help="Creates a Student")
 @click.argument("username", default="James")
 @click.argument("password", default="T.Kirk")
-def create_user_command(username, password):
+def create_student_command(username, password):
     create_Student(username, password)
     print(f'{username} is an Student !')
+"""
+@user_cli.command("login", help="Lists users in the database")
+@click.argument("username", default="rob")
+@click.argument("password", default="robpass")
+def login_user_command(username, password):
+    access_token = jwt_authenticate(username, password)
+    if access_token:
+        student = Student.query.filter_by(username=username).first()
+        admin = Admin.query.filter_by(username=username).first()
+        if student:
+            return student, access_token, f'Token: {access_token}'
+        elif admin:
+            return admin, access_token, f'Access Token: {access_token}'
+    return None, None, 'bad username or password given', 401
+"""
 
-#@user_cli.command("createCompetition", help="Creates a Competition")
-#@click.argument("name", default="RunTime")
-#def create_user_command(name):
- #   add_Competition(name)
-  #  print(f'{name} created!')
+
+@user_cli.command("login", help="Log in a user")
+@click.argument("username", default="rob")
+@click.argument("password", default="robpass")
+def login_user_command(username, password):
+    access_token = jwt_authenticate(username, password)
+    if access_token:
+        student = Student.query.filter_by(username=username).first()
+        admin = Admin.query.filter_by(username=username).first()
+        if student:
+            print(f'Student logged in!\nUser: {student}\nAccess Token: {access_token}')
+        elif admin:
+            print(f'Admin logged in!\nUser: {admin}\nAccess Token: {access_token}')
+    else:
+        print('Login unsuccessful!')
+
+@user_cli.command("createCompetition", help="Creates a Competition")
+@click.argument("name", default="RunTime")
+def create_competition_command(name):
+  admin = Admin.query.filter_by(username=username).first()
+  if admin:
+    Competition = create_Competition(Admin.id, name)
+    create_Competition(name)
+    print(f'{name} created!')
+
+
 
 # Then define the command and any parameters and annotate it with the group (@)
 

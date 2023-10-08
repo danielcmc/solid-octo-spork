@@ -1,6 +1,8 @@
 from App.models import User
 from App.models import Admin
 from App.models import Student
+from App.models import Competition
+
 from App.database import db
 
 def create_User(username, password):
@@ -46,9 +48,29 @@ def update_student(id, username):
         return db.session.commit()
     return None
 
-#def add_Competition(self, name: str, Creator: int):
- #       new_Competition = Competition(name=name, creator_id=self.id)
+#def add_Competition(name: str):
+ #       new_Competition = Competition(name=name)
   #      db.session.add(new_Competition)
    #     db.session.commit()
     #    return new_Competition
-    
+
+
+
+#//write a function to create a competition
+def create_Competition(name: str):
+    new_Competition = Competition(name=name)
+    db.session.add(new_Competition)
+    db.session.commit()
+    return new_Competition
+
+
+#//write a function to add a competition to a student
+def add_Competition_to_student(self, student_id: int, competition_id: int):
+    student = self.get_student(student_id)
+    competition = self.get_competition(competition_id)
+    if student and competition:
+        student.competitions.append(competition)
+        db.session.add(student)
+        db.session.commit()
+        return student
+    return None

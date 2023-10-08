@@ -39,3 +39,10 @@ def create_user_action():
 @user_views.route('/static/users', methods=['GET'])
 def static_user_page():
   return send_from_directory('static', 'static-user.html')
+
+
+@user_views.route('/create_competition')
+def create_competition():
+    name = "Example Competition"
+    create_Competition(name)
+    return "Competition created successfully!"
