@@ -42,7 +42,7 @@ def login_user_command(username, password):
 # eg : flask user <command>
 student_cli = AppGroup('student', help='Student object commands') 
  
-@student_cli.command("createStudent", help="Creates a Student")
+@student_cli.command("create", help="Creates a Student")
 @click.argument("username", default="James")
 @click.argument("password", default="T.Kirk")
 def create_student_command(username, password):
@@ -53,19 +53,19 @@ def create_student_command(username, password):
 ## Use click.prompts
 
 @student_cli.command("participate", help="Student")
-@click.argument("username", default="Kim")
-@click.argument("Competition_name", default="RunTime1")
-def student_Participate(username, competition_name):
-    student = Student.query.filter_by(username=username).first()
+@click.argument("id", default="2")
+@click.argument("competition_id", default="1")
+def student_Participate(id, competition_id):
+    student = get_student(id)
     if student:
-        competition = Competition.query.filter_by(name=competition_name).first()
+        competition = get_competition(competition_id)
         if competition:
-            student.participate_in_competition(competition_name)
-            print(f'{username} is a participant in a competition!')
+            student.participate_in_competition(competition_id)
+            print(f'{Student.id} is a participant in a competition!')
         else:
-            print(f'Competition {competition_name} not found')
+            print(f'Competition {competition_id} not found')
     else:
-        print(f'Student {username} not found')
+        print(f'Student {competition_id} not found')
 
 
 """
@@ -135,7 +135,8 @@ def create_competition_command(name,username):
   admin = Admin.query.filter_by(username=username).first()
   if admin:
     Competition = admin.add_Competition(name)
-    print(f'{name} created!')
+    print(f'{name} created by {admin.id}!')
+
 
 
 @admin_cli.command("list", help="Lists users in the database")
@@ -147,6 +148,11 @@ def list_user_command(format):
         print(get_all_students_json())
 
 
+@admin_cli.command("listComp", help="Lists users in the database")
+@click.argument("format", default="string")
+def list_user_command(format):
+    print(get_all_competitions())
+   
 
 app.cli.add_command(admin_cli)
 

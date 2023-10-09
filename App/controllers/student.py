@@ -1,5 +1,5 @@
 from App.models import User, Student, Competition, Participation
-from App.controllers import competition
+#from App.controllers import competition
 
 from App.database import db
 from flask_jwt_extended import create_access_token
