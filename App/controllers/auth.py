@@ -6,7 +6,6 @@ from App.models import User, Admin, Student
 
 
 
-
 def jwt_authenticate(username, password):
     student = Student.query.filter_by(username=username).first()
     admin = Admin.query.filter_by(username=username).first()
@@ -93,31 +92,10 @@ def setup_jwt(app):
 
     return jwt
 
-def initialize():
-    db.drop_all()
-    db.create_all()
-    rob = create_Admin('rob', 'robpass')
-    sally = create_Student('sally', 'sallypass')
-    bob = create_Student('bob', 'bobpass')
-    RunTime = create_Competition(1,'RunTime')
-    print( 'database intialized' )
 
 
 #########################################################################
 
-def login_customer(username, password):
-    customer = Customer.query.filter_by(username=username).first()
-    if customer and customer.check_password(password):
-        login_user(customer)
-        return customer
-    return None
-
-def login_staff(username, password):
-    staff = Staff.query.filter_by(username=username).first()
-    if staff and staff.check_password(password):
-        login_user(staff)
-        return staff
-    return None
 
 
 

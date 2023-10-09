@@ -75,6 +75,16 @@ def update_Admin(id, username):
         return db.session.commit()
     return None
 
+
+def initialize():
+    db.drop_all()
+    db.create_all()
+    rob = create_Admin('rob', 'robpass')
+    sally = create_Student('sally', 'sallypass')
+    bob = create_Student('bob', 'bobpass')
+  #  RunTime = create_Competition(1,'RunTime')
+    print( 'database intialized' )
+
 #def add_Competition(name: str):
  #       new_Competition = Competition(name=name)
   #      db.session.add(new_Competition)
