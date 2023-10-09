@@ -93,17 +93,17 @@ def setup_jwt(app):
 
     return jwt
 
+def initialize():
+    db.drop_all()
+    db.create_all()
+    rob = create_Admin('rob', 'robpass')
+    sally = create_Student('sally', 'sallypass')
+    bob = create_Student('bob', 'bobpass')
+    RunTime = create_Competition(1,'RunTime')
+    print( 'database intialized' )
+
 
 #########################################################################
-
-def login(username, password):
-    staff = Staff.query.filter_by(username=username).first()
-    if staff and staff.check_password(password):
-        return staff
-    customer = Customer.query.filter_by(username=username).first()
-    if customer and customer.check_password(password):
-        return customer
-    return None
 
 def login_customer(username, password):
     customer = Customer.query.filter_by(username=username).first()
@@ -119,18 +119,7 @@ def login_staff(username, password):
         return staff
     return None
 
-def initialize():
-    db.drop_all()
-    db.create_all()
-    rob = create_customer('rob', 'robpass')
-    sally = create_customer('sally', 'sallypass')
-    bob = create_staff('bob', 'bobpass')
-    cache_api_games()
-    listing1 =  list_game(bob.id, rob.id, 23, 'ok', 11)
-    list_game(bob.id, rob.id, 100, 'good', 12)
-    list_game(bob.id, rob.id, 57, 'new', 13)
-    rental = create_rental(sally.id, listing1.listingId)
-    print(rental)
+
 
 def Student_required(func):
     @wraps(func)
