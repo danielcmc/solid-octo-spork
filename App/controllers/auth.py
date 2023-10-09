@@ -1,5 +1,6 @@
 from flask_login import login_user, login_manager, logout_user, LoginManager
-from flask_jwt_extended import create_access_token, jwt_required, JWTManager
+from flask_jwt_extended import create_access_token, jwt_required, JWTManager,get_jwt_identity
+
 
 from App.models import User, Admin, Student
 

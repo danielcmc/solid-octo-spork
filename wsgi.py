@@ -110,12 +110,12 @@ def create_admin_command(username, password):
 
 @admin_cli.command("createCompetition", help="Creates a Competition")
 @click.argument("name", default="RunTime")
+@jwt_required()
 def create_competition_command(name):
   username = get_jwt_identity()
   admin = Admin.query.filter_by(username=username).first()
   if admin:
-    Competition = create_Competition(Admin.id, name)
-    create_Competition(name)
+    Competition = create_Competition(admin.id, name)
     print(f'{name} created!')
 
 
@@ -154,7 +154,3 @@ app.cli.add_command(test)
 
 
 
-
-
-
-####################################################
