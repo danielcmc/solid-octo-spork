@@ -5,6 +5,8 @@ from flask_login import login_required, login_user, current_user, logout_user
 from.index import index_views
 
 from App.controllers import *
+from App.models import *
+
 
 auth_views = Blueprint('auth_views', __name__, template_folder='../templates')
 
@@ -23,7 +25,22 @@ def get_user_page():
 def identify_page():
     return jsonify({'message': f"username: {current_user.username}, id : {current_user.id}"})
 
+@auth_views.route('/login', methods=['POST'])
+def login_action():
+    username = request.form.get('username')
+    password = request.form.get('password')
+    user = None
+    if Admin.query.filter_by(username=username).first():
+        user = login_Admin(username, password)
+    elif Student.query.filter_by(username=username).first():
+        user = login_Student(username, password)
+    if user:
+        return redirect('/')
+    flash('Invalid username/password')
+    return redirect('/login')
 
+
+'''
 @auth_views.route('/login', methods=['POST'])
 def login_action():
     data = request.form
@@ -32,7 +49,7 @@ def login_action():
         login_user(user)
         return 'user logged in!'
     return 'bad username or password given', 401
-
+'''
 @auth_views.route('/logout', methods=['GET'])
 def logout_action():
     data = request.form
@@ -66,3 +83,49 @@ def user_login_api():
 @jwt_required()
 def identify_user_action():
     return jsonify({'message': f"username: {jwt_current_user.username}, id : {jwt_current_user.id}"})
+
+
+
+############################################################################
+'''
+@auth_views.route('/login', methods=['GET'])
+def login_page():
+    return render_template('login.html')
+
+@auth_views.route('/login', methods=['POST'])
+def login_action():
+    username = request.form.get('username')
+    password = request.form.get('password')
+    role = request.form.get('role')
+    user = None
+    if role == 'customer':
+        user = login_customer(username, password)
+    elif role == 'staff':
+        user = login_staff(username, password)
+    if user:
+        return redirect('/')
+    flash('Invalid username/password')
+    return redirect('/login')
+
+@auth_views.route('/login', methods=['POST'])
+def login_action():
+    username = request.form.get('username')
+    password = request.form.get('password')
+    user = None
+    if Admin.query.filter_by(username=username).first():
+        user = login_Admin(username, password)
+    elif Student.query.filter_by(username=username).first():
+        user = login_Student(username, password)
+    if user:
+        return redirect('/')
+    flash('Invalid username/password')
+    return redirect('/login')
+
+
+
+@auth_views.route('/logout', methods=['GET'])
+def logout_action():
+    logout_user()
+    return redirect('/')
+
+    '''

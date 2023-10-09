@@ -15,6 +15,18 @@ class Student(User):
         else:
             return None
 
+    def add_Competition_to_student(self, student_id: int, competition_id: int):
+        student = self.get_student(student_id)
+        competition = self.get_competition(competition_id)
+        if student and competition:
+            student.competitions.append(competition)
+            db.session.add(student)
+            db.session.commit()
+            return student
+        else:
+            return None
+
+
     def get_json(self):
         return {
             "id": self.id,

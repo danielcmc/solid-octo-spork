@@ -16,20 +16,42 @@ def jwt_authenticate(username, password):
     return None
 
 def login(username, password):
-    access_token = jwt_authenticate(username, password)
-    if access_token:
-        student = Student.query.filter_by(username=username).first()
-        admin = Admin.query.filter_by(username=username).first()
-        if student:
-            if student.check_password(password):
-                login_user(student)
-                return student
-        elif admin:
-            if admin.check_password(password):
-                login_user(admin)
-                return admin
+    student = Student.query.filter_by(username=username).first()
+    admin = Admin.query.filter_by(username=username).first()
+    if student:
+        if student.check_password(password):
+           # login_user(student)
+            return student
+    elif admin:
+        if admin.check_password(password):
+           # login_user(admin)
+            return admin
+    return None
     return None
 
+
+'''def login(username, password):
+    staff = Staff.query.filter_by(username=username).first()
+    if staff and staff.check_password(password):
+        return staff
+    customer = Customer.query.filter_by(username=username).first()
+    if customer and customer.check_password(password):
+        return customer
+    return None
+'''
+def login_Student(username, password):
+    student = Student.query.filter_by(username=username).first()
+    if student and student.check_password(password):
+        login_user(student)
+        return student
+    return None
+
+def login_Admin(username, password):
+    admin = Admin.query.filter_by(username=username).first()
+    if admin and admin.check_password(password):
+        login_user(admin)
+        return admin
+    return None
 
 def setup_flask_login(app):
     login_manager = LoginManager()
@@ -48,6 +70,7 @@ def setup_flask_login(app):
         return None  
 
     return login_manager
+    
 
 def setup_jwt(app):
     jwt = JWTManager(app)
@@ -70,3 +93,56 @@ def setup_jwt(app):
     return jwt
 
 
+#########################################################################
+
+def login(username, password):
+    staff = Staff.query.filter_by(username=username).first()
+    if staff and staff.check_password(password):
+        return staff
+    customer = Customer.query.filter_by(username=username).first()
+    if customer and customer.check_password(password):
+        return customer
+    return None
+
+def login_customer(username, password):
+    customer = Customer.query.filter_by(username=username).first()
+    if customer and customer.check_password(password):
+        login_user(customer)
+        return customer
+    return None
+
+def login_staff(username, password):
+    staff = Staff.query.filter_by(username=username).first()
+    if staff and staff.check_password(password):
+        login_user(staff)
+        return staff
+    return None
+
+def initialize():
+    db.drop_all()
+    db.create_all()
+    rob = create_customer('rob', 'robpass')
+    sally = create_customer('sally', 'sallypass')
+    bob = create_staff('bob', 'bobpass')
+    cache_api_games()
+    listing1 =  list_game(bob.id, rob.id, 23, 'ok', 11)
+    list_game(bob.id, rob.id, 100, 'good', 12)
+    list_game(bob.id, rob.id, 57, 'new', 13)
+    rental = create_rental(sally.id, listing1.listingId)
+    print(rental)
+
+def Student_required(func):
+    @wraps(func)
+    def wrapper(*args, **kwargs):
+        if not current_user.is_authenticated or not isinstance(current_user, Student):
+            return "Unauthorized", 401
+        return func(*args, **kwargs)
+    return wrapper
+
+def Admin_required(func):
+    @wraps(func)
+    def wrapper(*args, **kwargs):
+        if not current_user.is_authenticated or not isinstance(current_user, Admin):
+            return "Unauthorized", 401
+        return func(*args, **kwargs)
+    return wrapper

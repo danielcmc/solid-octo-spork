@@ -16,29 +16,33 @@ migrate = get_migrate(app)
 def initialize():
     db.drop_all()
     db.create_all()
-    create_Admin('bob', 'bobpass')
+    create_Admin('Kim', 'Possible')
+    create_Student('robin', 'Hood')
+    create_Competition(1, 'RunTime')
     print('database intialized')
 
-'''
-User Commands
-'''
+@app.cli.command("login", help="Login")
+@click.argument("username", default="rob")
+@click.argument("password", default="robpass")
+def login_user_command(username, password):
+    access_token = jwt_authenticate(username, password)
+    if access_token:
+        student = Student.query.filter_by(username=username).first()
+        admin = Admin.query.filter_by(username=username).first()
+        if student:
+            print(f'Student logged in!\nUser: {student}\nAccess Token: {access_token}')
+        elif admin:
+            print(f'Admin logged in!\nUser: {admin}\nAccess Token: {access_token}')
+    else:
+        print('Login unsuccessful!')
 
 # Commands can be organized using groups
 
 # create a group, it would be the first argument of the comand
 # eg : flask user <command>
-user_cli = AppGroup('user', help='User object commands') 
-
-
-@user_cli.command("createAdmin", help="Creates a Competition")
-@click.argument("username", default="Dave")
-@click.argument("password", default="NBuster")
-def create_admin_command(username, password):
-    create_Admin(username, password)
-    print(f'{username} is an Admin !')
-
-
-@user_cli.command("createStudent", help="Creates a Student")
+student_cli = AppGroup('student', help='Student object commands') 
+ 
+@student_cli.command("createStudent", help="Creates a Student")
 @click.argument("username", default="James")
 @click.argument("password", default="T.Kirk")
 def create_student_command(username, password):
@@ -58,10 +62,10 @@ def login_user_command(username, password):
         elif admin:
             return admin, access_token, f'Access Token: {access_token}'
     return None, None, 'bad username or password given', 401
-"""
 
 
-@user_cli.command("login", help="Log in a user")
+
+@student_cli.command("login", help="Log in a user")
 @click.argument("username", default="rob")
 @click.argument("password", default="robpass")
 def login_user_command(username, password):
@@ -76,15 +80,8 @@ def login_user_command(username, password):
     else:
         print('Login unsuccessful!')
 
-@user_cli.command("createCompetition", help="Creates a Competition")
-@click.argument("name", default="RunTime")
-def create_competition_command(name):
-  admin = Admin.query.filter_by(username=username).first()
-  if admin:
-    Competition = create_Competition(Admin.id, name)
-    create_Competition(name)
-    print(f'{name} created!')
 
+"""
 
 
 # Then define the command and any parameters and annotate it with the group (@)
@@ -92,7 +89,7 @@ def create_competition_command(name):
 
 # this command will be : flask user create bob bobpass
 
-@user_cli.command("list", help="Lists users in the database")
+@student_cli.command("list", help="Lists users in the database")
 @click.argument("format", default="string")
 def list_user_command(format):
     if format == 'string':
@@ -100,7 +97,41 @@ def list_user_command(format):
     else:
         print(get_all_students_json()) 
 
-app.cli.add_command(user_cli) # add the group to the cli
+app.cli.add_command(student_cli) # add the group to the cli
+
+admin_cli = AppGroup('Admin', help='User object commands') 
+
+@admin_cli.command("create", help="Creates a Competition")
+@click.argument("username", default="Dave")
+@click.argument("password", default="NBuster")
+def create_admin_command(username, password):
+    create_Admin(username, password)
+    print(f'{username} is an Admin !')
+
+@admin_cli.command("createCompetition", help="Creates a Competition")
+@click.argument("name", default="RunTime")
+def create_competition_command(name):
+  username = get_jwt_identity()
+  admin = Admin.query.filter_by(username=username).first()
+  if admin:
+    Competition = create_Competition(Admin.id, name)
+    create_Competition(name)
+    print(f'{name} created!')
+
+
+@admin_cli.command("list", help="Lists users in the database")
+@click.argument("format", default="string")
+def list_user_command(format):
+    if format == 'string':
+        print(get_all_admins())
+    else:
+        print(get_all_students_json())
+
+
+
+app.cli.add_command(admin_cli)
+
+
 
 '''
 Test Commands
@@ -120,3 +151,10 @@ def user_tests_command(type):
     
 
 app.cli.add_command(test)
+
+
+
+
+
+
+####################################################

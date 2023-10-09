@@ -46,3 +46,24 @@ def create_competition():
     name = "Example Competition"
     create_Competition(name)
     return "Competition created successfully!"
+
+@user_views.route('/login', methods=['POST'])
+def user_login_view():
+  data = request.json
+  token = user_login(data['username'], data['password'])
+  if not token:
+    return jsonify(message='bad username or password given'), 401
+  return jsonify(access_token=token)
+
+@user_views.route('/identify')
+@jwt_required()
+def identify_view():
+  username = get_jwt_identity() # convert sent token to user name
+  #retrieve regular user with given username
+  user = RegularUser.query.filter_by(username=username).first()
+  if user:
+    return jsonify(user.get_json()) #jsonify user object
+  #retrieve admin user with given username
+  admin = Admin.query.filter_by(username=username).first()
+  if admin:
+    return jsonify(admin.get_json())#jsonify admin object
