@@ -16,7 +16,7 @@ def r():
 @user_views.route('/users', methods=['GET'])
 def get_user_page():
     students = get_all_students()
-    return render_template('users.html', users=users)
+    return render_template('users.html', students=students)
 
 @user_views.route('/api/users', methods=['GET'])
 def get_users_action():
