@@ -18,13 +18,6 @@ class Admin(User):
         
         return new_Competition
 
-    @classmethod
-    def create_Competition(cls, name: str):
-        new_Competition = Competition(name=name)
-        db.session.add(new_Competition)
-        db.session.commit()
-        
-        return new_Competition
 
     def get_json(self):
         return {

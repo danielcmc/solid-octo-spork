@@ -48,6 +48,26 @@ student_cli = AppGroup('student', help='Student object commands')
 def create_student_command(username, password):
     create_Student(username, password)
     print(f'{username} is an Student !')
+
+
+## Use click.prompts
+
+@student_cli.command("participate", help="Student")
+@click.argument("username", default="Kim")
+@click.argument("Competition_name", default="RunTime1")
+def student_Participate(username, competition_name):
+    student = Student.query.filter_by(username=username).first()
+    if student:
+        competition = Competition.query.filter_by(name=competition_name).first()
+        if competition:
+            student.participate_in_competition(competition_name)
+            print(f'{username} is a participant in a competition!')
+        else:
+            print(f'Competition {competition_name} not found')
+    else:
+        print(f'Student {username} not found')
+
+
 """
 @user_cli.command("login", help="Lists users in the database")
 @click.argument("username", default="rob")
@@ -110,12 +130,11 @@ def create_admin_command(username, password):
 
 @admin_cli.command("createCompetition", help="Creates a Competition")
 @click.argument("name", default="RunTime")
-@jwt_required()
-def create_competition_command(name):
-  username = get_jwt_identity()
+@click.argument("username", default="Dave")
+def create_competition_command(name,username):
   admin = Admin.query.filter_by(username=username).first()
   if admin:
-    Competition = create_Competition(admin.id, name)
+    Competition = admin.add_Competition(name)
     print(f'{name} created!')
 
 
