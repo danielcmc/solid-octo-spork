@@ -79,10 +79,10 @@ def update_Admin(id, username):
 def initialize():
     db.drop_all()
     db.create_all()
-    rob = create_Admin('rob', 'robpass')
+    rob = create_Admin('rob', 'robpass', 301)
     sally = create_Student('sally', 'sallypass')
     bob = create_Student('bob', 'bobpass')
-  #  RunTime = create_Competition(1,'RunTime')
+    RunTime = create_Competition('SuperSprint',301)
     print( 'database intialized' )
 
 #def add_Competition(name: str):
