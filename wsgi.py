@@ -150,6 +150,21 @@ def list_student_command(format):
     else:
         print(get_all_students_json()) 
 
+@student_cli.command("notification", help="Notify a change in standings")
+@click.argument("username", default="bob")
+def notify_user(username):
+  student = Student.query.filter_by(username=username).first()
+  if student:
+    if student.ranking != student.previous_ranking:
+      print(f'{student.username} has changed rankings to Rank {student.ranking}')
+      student.previous_ranking = student.ranking
+      db.session.add(student)
+      db.session.commit()
+    else:
+      print(f'{student.username} has not changed rankings')
+  else:
+    print(f'{username} was not found')
+
 app.cli.add_command(student_cli) # add the group to the cli
 
 admin_cli = AppGroup('Admin', help='Admin object commands') 
@@ -212,6 +227,11 @@ def add_results(admin_username, student_username, competition_name, score):
         participation.points_earned = score
         db.session.add(participation)
         db.session.commit()
+        score = get_points(student.id)
+        student.set_points(score)
+        db.session.add(student)
+        db.session.commit()
+        update_rankings()
         #competition.participants = participation
         """for participant in comp.participants:
           if participant.id == participation.id:
@@ -256,6 +276,30 @@ def display_competition_details():
           #participation = Participation.query.filter_by(user_id=participant.id).first()
           #if participation:
           print(participant.get_json())
+
+@user_cli.command("rankings", help="displays competition ranking")
+def display_ranking():
+  students = get_all_students_json()
+
+  if not students:
+    print("No students found!")
+  else:
+    print("Rankings:")
+    
+    students.sort(key=sort_rankings,reverse=True)
+    curr_high = students[0]["total points"]
+    curr_rank = 1
+    for student in students:
+      if curr_high != student["total points"]:
+        curr_rank += 1
+        curr_high = student["total points"]
+      
+      stud = get_student(student["id"])
+      stud.set_ranking(curr_rank)
+      stud.set_previous_ranking(curr_rank)
+      db.session.add(stud)
+      db.session.commit()
+      print(f'Rank: {curr_rank}\tStudent: {stud.username}\tPoints: {stud.points}')
 
 app.cli.add_command(user_cli)
 
