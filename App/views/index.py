@@ -10,7 +10,13 @@ def index_page():
 
 @index_views.route('/init', methods=['GET'])
 def init():
-    initialize()
+    db.drop_all()
+    db.create_all()
+    rob = create_Admin('rob', 'robpass', 301)
+    sally = create_Student('sally', 'sallypass')
+    bob = create_Student('bob', 'bobpass')
+    RunTime = create_Competition('SuperSprint',301)
+    print( 'database intialized' )
     return jsonify(message='db initialized!')
 
 @index_views.route('/health', methods=['GET'])
