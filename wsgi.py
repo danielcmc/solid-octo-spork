@@ -285,13 +285,13 @@ def display_ranking():
     print("No students found!")
   else:
     print("Rankings:")
-    
+    count = 1
     students.sort(key=sort_rankings,reverse=True)
     curr_high = students[0]["total points"]
     curr_rank = 1
     for student in students:
       if curr_high != student["total points"]:
-        curr_rank += 1
+        curr_rank = count
         curr_high = student["total points"]
       
       stud = get_student(student["id"])
@@ -300,6 +300,7 @@ def display_ranking():
       db.session.add(stud)
       db.session.commit()
       print(f'Rank: {curr_rank}\tStudent: {stud.username}\tPoints: {stud.points}')
+      count += 1
 
 app.cli.add_command(user_cli)
 
