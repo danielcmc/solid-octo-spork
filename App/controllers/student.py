@@ -47,20 +47,21 @@ def sort_rankings(value):
 
 def update_rankings():
   students = get_all_students_json()
-
+  count = 1
   if students:
     students.sort(key=sort_rankings,reverse=True)
     curr_high = students[0]["total points"]
     curr_rank = 1
     for student in students:
       if curr_high != student["total points"]:
-        curr_rank += 1
+        curr_rank = count
         curr_high = student["total points"]
       
       stud = get_student(student["id"])
       stud.set_ranking(curr_rank)
       db.session.add(stud)
       db.session.commit()
+      count += 1
 
 def get_all_students():
     return Student.query.all()
