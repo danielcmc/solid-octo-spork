@@ -22,6 +22,18 @@ def get_student_by_username(username):
 def get_student(id):
     return Student.query.get(id)
 
+def get_competition(id):
+  return Competition.query.get(id)
+
+def get_points(id):
+    student = get_student(id)
+    score = 0
+    for comp in student.competitions: 
+      participation = Participation.query.filter_by(user_id=id, competition_id=comp.id).first()
+      if participation:
+        score += participation.points_earned
+    return score
+
 def get_all_students():
     return Student.query.all()
 
