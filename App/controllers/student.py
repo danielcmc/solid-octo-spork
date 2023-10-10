@@ -15,6 +15,26 @@ def create_Student(username, password):
     else:
       print(f'{username} created!')
     return newStudent
+"""
+
+def create_Student(username, password):
+    Here = Student.query.filter_by(username=username).first()
+    if Here:
+        print(f'{username} already exists!')
+        return Here
+    newStudent = Student(username=username, password=password)
+    try:
+      db.session.add(newStudent)
+      db.session.commit()
+      print(f'New Student: {username} created!')
+    except Exception as e:
+      db.session.rollback()
+      print(f'Something went wrong creating {username}')
+    return newStudent
+
+    """
+
+
 
 def get_student_by_username(username):
     return Student.query.filter_by(username=username).first()

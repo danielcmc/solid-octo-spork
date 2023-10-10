@@ -16,7 +16,7 @@ migrate = get_migrate(app)
 def initialize():
     db.drop_all()
     db.create_all()
-    create_Admin('Kim', 'Possible')
+    create_Admin('Kim', 'Possible',33)
     create_Student('robin', 'Hood')
     create_Competition(1, 'RunTime')
     print('database intialized')

@@ -16,6 +16,22 @@ def create_Competition(name, creator_id):
       print(f'{name} created!')
     return newComp
 
+"""def create_Competition(name, creator_id):
+    Here= Competition.query.filter_by(name=name).first()
+    if Here:
+        print(f'{name} already exists!')
+        return Here
+    newComp = Competition(name=name, creator_id=creator_id)
+    try:
+      db.session.add(newComp)
+      db.session.commit()
+      print(f'{name} created!')
+    except Exception as e:
+      db.session.rollback()
+      print(f'Something went wrong creating {name}')
+    return newComp
+    """
+
 def get_competition(id):
   return Competition.query.get(id)
 

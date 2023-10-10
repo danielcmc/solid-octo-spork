@@ -18,10 +18,36 @@ def get_user_page():
     students = get_all_students()
     return render_template('users.html', students=students)
 
-@user_views.route('/api/users', methods=['GET'])
+"""@user_views.route('/api/users', methods=['GET'])
 def get_users_action():
     students = get_all_users_json()
     return jsonify(users)
+"""
+
+@user_views.route('/api/users', methods=['GET'])
+def get_user_page(): 
+  students = Student.query.all() 
+  if not students: 
+    return [] 
+  students = [Student.get_json() for Student in students] 
+  return students 
+
+@user_views.route('/api/usersz', methods=['GET'])
+def get_users_action():
+    students = get_all_users_json()
+    return jsonify(students)
+
+@user_views.route('/api/userrs', methods=['GET'])
+def get_user_page():
+    students = Student.query.all()
+    if not students:
+        return jsonify([])  
+
+    # Serialize the list of students to JSON
+    student_data = [{'id': student.id, 'name': student.name} for student in students]
+
+    return jsonify(student_data)
+
 
 @user_views.route('/api/users', methods=['POST'])
 def create_user_endpoint():
