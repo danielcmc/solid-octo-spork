@@ -3,19 +3,7 @@ from App.models import User, Admin
 from App.database import db
 from flask_jwt_extended import create_access_token
 
-def create_Admin(username, password, staff_id):
-    newA = Admin(username=username, password=password, staff_id=staff_id)
-    try:
-      db.session.add(newA)
-      db.session.commit()
-    except Exception as e:
-      db.session.rollback()
-      print(f'{username} already exists!')
-    else:
-      print(f'{username} created!')
-    return newA  
 
-"""
 def create_Admin(username, password, staff_id):
     Here = Admin.query.filter_by(username=username).first()
     if Here:
@@ -30,8 +18,7 @@ def create_Admin(username, password, staff_id):
       db.session.rollback()
       print(f'Something went wrong creating {username}')
     return newA  
- 
-"""
+
 
 def get_admin_by_username(username):
     return Admin.query.filter_by(username=username).first()
