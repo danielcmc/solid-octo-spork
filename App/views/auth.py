@@ -65,11 +65,22 @@ def get_users_action():
     users = get_all_users_json()
     return jsonify(users)
 
+@auth_views.route('/api/admin', methods=['GET'])
+def get_Admin():
+    admins = get_all_admins_json()
+    return jsonify(admins)
+
 @auth_views.route('/api/users', methods=['POST'])
 def create_user_endpoint():
     data = request.json
     create_user(data['username'], data['password'])
     return jsonify({'message': f"user {data['username']} created"})
+
+@auth_views.route('/api/admin', methods=['POST'])
+def create_admin():
+    data = request.json
+    create_admin(data['username'], data['password'])
+    return jsonify({'message': f"admin {data['username']} created"})
 
 @auth_views.route('/api/login', methods=['POST'])
 def user_login_api():
