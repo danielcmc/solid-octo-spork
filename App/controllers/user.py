@@ -6,8 +6,8 @@ from App.models import Competition
 from App.database import db
 from flask_jwt_extended import create_access_token
 
-def create_Admin(username, password):
-    newA = Admin(username=username, password=password)
+def create_Admin(username, password,staff_id):
+    newA = Admin(username=username, password=password,staff_id=staff_id)
     db.session.add(newA)
     db.session.commit()
     return newA   
