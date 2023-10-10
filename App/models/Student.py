@@ -58,7 +58,7 @@ class Student(User):
         return {
             "id": self.id,
             "username": self.username,
-            "role": 'Student'
+            "point": self.point
         }
 
     def __repr__(self):

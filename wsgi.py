@@ -17,8 +17,12 @@ def initialize():
     db.drop_all()
     db.create_all()
     create_Admin('Kim', 'Possible',33)
+    create_Admin('Dr', 'robpass', 991)
+    create_Student('sally', 'sallypass')
     create_Student('robin', 'Hood')
-    create_Competition(1, 'RunTime')
+    create_Competition('RunTime',33)
+    create_Competition('SuperSprint',991)
+
     print('database intialized')
 
 @app.cli.command("login", help="Login")

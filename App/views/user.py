@@ -18,6 +18,25 @@ def get_user_page():
     students = get_all_students()
     return render_template('users.html', students=students)
 
+
+@user_views.route('/api/competitions', methods=['GET'])
+def get_competition_endpoint():
+    competitions = get_all_competitions()
+    return jsonify(competitions)
+
+
+@user_views.route('/api/competitions/{{id}}', methods=['GET'])
+def get_competition_by_id_endpoint():
+    competitions = get_competition(id)
+    return jsonify(competitions)
+
+
+
+@user_views.route('/api/details/{{username}}', methods=['GET'])
+def get_detail_endpoint(username):
+  display_user_info(username)
+    
+
 """@user_views.route('/api/users', methods=['GET'])
 def get_users_action():
     students = get_all_users_json()
@@ -31,22 +50,6 @@ def get_user_page1():
     return [] 
   students = [Student.get_json() for Student in students] 
   return students 
-
-@user_views.route('/api/usersz', methods=['GET'])
-def get_users_action3():
-    students = get_all_users_json()
-    return jsonify(students)
-
-@user_views.route('/api/userrs', methods=['GET'])
-def get_user_page51():
-    students = Student.query.all()
-    if not students:
-        return jsonify([])  
-
-    # Serialize the list of students to JSON
-    student_data = [{'id': student.id, 'name': student.name} for student in students]
-
-    return jsonify(student_data)
 
 
 @user_views.route('/api/users', methods=['POST'])

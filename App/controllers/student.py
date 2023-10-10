@@ -5,19 +5,6 @@ from App.database import db
 from flask_jwt_extended import create_access_token
 
 def create_Student(username, password):
-    newStudent = Student(username=username, password=password)
-    try:
-      db.session.add(newStudent)
-      db.session.commit()
-    except Exception as e:
-      db.session.rollback()
-      print(f'{username} already exists!')
-    else:
-      print(f'{username} created!')
-    return newStudent
-"""
-
-def create_Student(username, password):
     Here = Student.query.filter_by(username=username).first()
     if Here:
         print(f'{username} already exists!')
@@ -31,9 +18,6 @@ def create_Student(username, password):
       db.session.rollback()
       print(f'Something went wrong creating {username}')
     return newStudent
-
-    """
-
 
 
 def get_student_by_username(username):
@@ -71,3 +55,17 @@ def update_student(id, username):
         db.session.add(Student)
         return db.session.commit()
     return None
+
+def display_user_info(username):
+  student = Student.query.filter_by(username=username).first()
+  
+  if not student:
+    print(f'{username} is not a valid student username')
+  else:
+    score = get_points(student.id)
+    student.set_points(score)
+    print("Profile Infomation")
+    print(student.get_json())
+    print("Participated in the following competitions:")
+    for comp in student.competitions:
+      print(f'{comp.name} ')
