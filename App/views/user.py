@@ -25,7 +25,7 @@ def get_users_action():
 """
 
 @user_views.route('/api/users', methods=['GET'])
-def get_user_page(): 
+def get_user_page1(): 
   students = Student.query.all() 
   if not students: 
     return [] 
@@ -33,12 +33,12 @@ def get_user_page():
   return students 
 
 @user_views.route('/api/usersz', methods=['GET'])
-def get_users_action():
+def get_users_action3():
     students = get_all_users_json()
     return jsonify(students)
 
 @user_views.route('/api/userrs', methods=['GET'])
-def get_user_page():
+def get_user_page51():
     students = Student.query.all()
     if not students:
         return jsonify([])  
@@ -70,7 +70,8 @@ def static_user_page():
 @user_views.route('/create_competition')
 def create_competition():
     name = "Example Competition"
-    create_Competition(name)
+    ExampleId=4
+    create_Competition(name, ExampleId)
     return "Competition created successfully!"
 
 @user_views.route('/login', methods=['POST'])
