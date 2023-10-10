@@ -38,6 +38,30 @@ def get_points(id):
         score += participation.points_earned
     return score
 
+def get_ranking(id):
+    student = get_student(id)
+    return student.ranking
+
+def sort_rankings(value):
+  return value["total points"]
+
+def update_rankings():
+  students = get_all_students_json()
+
+  if students:
+    students.sort(key=sort_rankings,reverse=True)
+    curr_high = students[0]["total points"]
+    curr_rank = 1
+    for student in students:
+      if curr_high != student["total points"]:
+        curr_rank += 1
+        curr_high = student["total points"]
+      
+      stud = get_student(student["id"])
+      stud.set_ranking(curr_rank)
+      db.session.add(stud)
+      db.session.commit()
+
 def get_all_students():
     return Student.query.all()
 
