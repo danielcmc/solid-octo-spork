@@ -8,7 +8,7 @@ def create_Student(username, password):
     Here = Student.query.filter_by(username=username).first()
     if Here:
         print(f'{username} already exists!')
-        return Here
+        return None
     newStudent = Student(username=username, password=password)
     try:
       db.session.add(newStudent)

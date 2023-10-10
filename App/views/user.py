@@ -49,14 +49,16 @@ def get_user_page1():
   if not students: 
     return [] 
   students = [Student.get_json() for Student in students] 
-  return students 
+  return jsonify(students) 
 
 
 @user_views.route('/api/users', methods=['POST'])
 def create_user_endpoint():
     data = request.json
-    create_Student(data['username'], data['password'])
-    return jsonify({'message': f"user {data['username']} created"})
+    student  = create_Student(data['username'], data['password'])
+    if student is None:
+      return jsonify({'message': f"user {data['username']} already exists"}), 409
+    return jsonify({'message': f"user {student.username} created"})
 
 @user_views.route('/users', methods=['POST'])
 def create_user_action():
